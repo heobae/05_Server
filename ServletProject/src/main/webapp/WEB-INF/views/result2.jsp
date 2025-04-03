@@ -27,7 +27,7 @@
 	
 	<%= request.getParameterValues("opt") %>
 	
-	<%= if(request.getParameterValues("opt") != null) { %>
+	<% if(request.getParameterValues("opt") != null) { %>
 	<ul>
 		<% for(String opt : request.getParameterValues("opt")) { %>
 			<li><%= opt %></li>

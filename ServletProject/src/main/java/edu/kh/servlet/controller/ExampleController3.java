@@ -35,7 +35,7 @@ public class ExampleController3 extends HttpServlet {
 		for(String opt : optionArr) {
 			System.out.println(opt);
 		}
-		}
+	  }
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/result2.jsp");
 		
 		dispatcher.forward(req, resp);
