@@ -3,4 +3,60 @@
 <properties>
 
 	<!-- sql 작성 -->
+	
+	<!--  할 일 전체 조회 -->
+	<entry key="todoListFullView"> <!--  메서드명 -->
+		SELECT 
+		TODO_NO, 
+		TODO_TITLE, 
+		TODO_COMPLETE,
+		TO_CHAR(REG_DATE, 'YYYY-MM-DD HH24:MI:SS') REG_DATE
+		FROM TB_TODO
+		ORDER BY TODO_NO ASC
+	</entry>
+	
+	<!-- 완료된 할 일 개수 조회 -->
+	<entry key="getCompleteCount">
+		SELECT COUNT(*)
+		FROM TB_TODO
+		WHERE TODO_COMPLETE = 1
+	</entry>
+	
+	<!-- 할 일 추가하기  -->
+	<entry key="todoAdd">
+		INSERT INTO TB_TODO
+		VALUES(SEQ_TODO_NO.NEXTVAL, ?, ?, DEFAULT, DEFAULT)
+	</entry>
+	
+	<!-- 할 일 상세 조회하기 -->
+	<entry key="todoDetail">
+	SELECT TODO_NO, 
+	TODO_TITLE, 
+	TODO_DETAIL, 
+	TODO_COMPLETE,
+	TO_CHAR(REG_DATE, 'YYYY-MM-DD HH24:MI:SS') REG_DATE
+	FROM TB_TODO
+	WHERE TODO_NO = ?
+	</entry>
+	
+	<!-- 완료 여부 변경하기 -->
+	<entry key="todoComplete">
+		UPDATE TB_TODO
+		SET TODO_COMPLETE = DECODE(TODO_COMPLETE, 0, 1, 0) <!-- 0이면 1이되겠다. 그외는 0이 되겠다. -->
+		WHERE TODO_NO = ?
+	</entry>
+	
+	<!-- 할 일 삭제하기 -->
+	<entry key="todoDelete">
+		DELETE FROM TB_TODO
+		WHERE TODO_NO = ?
+	</entry>
+	
+	<!-- 할 일 수정하기 -->
+	<entry key="todoUpdate">
+		UPDATE TB_TODO
+		SET TODO_TITLE = ?,
+		TODO_DETAIL = ?
+		WHERE TODO_NO = ?
+	</entry>
 </properties>

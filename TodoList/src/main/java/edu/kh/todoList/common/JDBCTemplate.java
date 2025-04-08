@@ -50,7 +50,7 @@ public class JDBCTemplate {
 			}
 			
 			// 1. Properties 객체 생성
-			Properties prop = new Properties();
+			Properties prop = new Properties(); // driver.xml 파일 때문에
 			
 			// 2. Properties가 제공하는 메서드를 이용해서 driver.xml 파일 내용을 읽어오기
 			// src/main/resources 경로상에 위치한 driver.xml 파일 읽어오기
