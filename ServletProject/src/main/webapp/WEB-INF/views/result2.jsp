@@ -25,7 +25,7 @@
 		<%= request.getParameter("coffee") %>
 	</h3>
 	
-	<%= request.getParameterValues("opt") %>
+	<%= request.getParameterValues("opt") %> <%-- 객체배열의 주소값 --%>
 	
 	<% if(request.getParameterValues("opt") != null) { %>
 	<ul>

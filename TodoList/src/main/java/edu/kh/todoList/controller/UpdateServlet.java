@@ -2,6 +2,7 @@ package edu.kh.todoList.controller;
 
 import java.io.IOException;
 
+import edu.kh.todoList.model.dto.Todo;
 import edu.kh.todoList.model.service.TodoListService;
 import edu.kh.todoList.model.service.TodoListServiceImpl;
 import jakarta.servlet.ServletException;
@@ -18,34 +19,77 @@ public class UpdateServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		try {
-			// 서비스 객체 생성
-			TodoListService service = new TodoListServiceImpl();
+			
+			// 수정 화면에는 기존의 제목, 상세내용이
+			// input, textarea에 채워져있는 상태여야 한다!
+			// -> 수정 전 제목/내용 조회 == 상세조회 서비스 재호출
 			
 			// 요청 시 전달받은 파라미터 받아오기
 			int todoNo = Integer.parseInt(req.getParameter("todoNo"));
 			
-			// 알맞은 서비스 호출 후 결과 반환
-			int result = service.todoUpdate(todoNo);
+			// 서비스 객체 생성
+			TodoListService service = new TodoListServiceImpl();
+			Todo todo = service.todoDetail(todoNo);
 			
-			// session scope 객체 얻어오기
-			HttpSession session = req.getSession();
-									
-			// result 값이 0보다 크다 == 변경 성공 , 아니면 실패
-			// -> 원래 보고 있던 상세 페이지로 redirect
-			// -> message "완료 여부가 변경되었습니다!" alert
-			if(result > 0) {
-				session.setAttribute("message", "todo가 수정되었습니다!");
-				resp.sendRedirect("/todo/detail?todoNo=" + todoNo);
+			if(todo == null) {
+				// 메인페이지 redirect
+				resp.sendRedirect("/");
 				return;
 			}
-									
-			// 변경 실패 시
-			// -> 메인페이지로 redirect
-			// -> message "todo가 존재하지 않습니다" alert
-			session.setAttribute("message", "todo가 존재하지 않습니다");
-			resp.sendRedirect("/");
+			
+			// request scope에 todo 객체 세팅
+			req.setAttribute("todo", todo);
+			
+			// 요청발송자를 총해 forward
+			req.getRequestDispatcher("/WEB-INF/views/update.jsp").forward(req, resp);
+			
 			
 		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/* 요청 주소가 같을 때
+	 * 데이터 전달(제출) 방식이 다르면 (GET/POST)
+	 * 하나의 서블릿 클래스에서 각각의 메서드 (doGet() / doPost())를
+	 * 만들어 처리할 수 있다.
+	 * */
+	@Override	
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		try {
+			// 전달 받은 파라미터 얻어오기 (제목, 상세내용, todoNo)
+			String title = req.getParameter("title");
+			String detail = req.getParameter("detail");
+			int todoNo = Integer.parseInt(req.getParameter("todoNo"));
+			
+			TodoListService service = new TodoListServiceImpl();
+			int result = service.todoUpdate(todoNo, title, detail);
+			
+			// 수정 성공 시
+			// 상세 조회 페이지로 redirect
+			// "수정되었습니다" message를 alert 출력
+			
+			// 수정 실패 시
+			// 수정 화면으로 redirect
+			String url = null;
+			String message = null;
+			
+			if(result > 0) { // 성공
+				url = "/todo/detail?todoNo=" + todoNo;
+				message = "수정되었습니다.";
+			} else { // 실패
+				url = "/todo/update?todoNo=" + todoNo;
+				message = "수정 실패";
+			}
+			
+			// session 객체에 속성 추가
+			req.getSession().setAttribute("message", message);
+			
+			// redirect 는 GET 방식 요청
+			resp.sendRedirect(url);
+			
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

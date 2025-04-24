@@ -78,9 +78,16 @@
 	
 	<h3>JSTL c:if 문 사용해보기</h3>
 	<%
-		int age = Integer.parseInt(request.getParameter("age"));
-		if(age > 20) {
-	%>	<h3>성인입니다(JSP 스크립틀릿으로 출력)</h3>
+		String ageParam = request.getParameter("age");
+		int age = 0;
+		try {
+			age = Integer.parseInt(ageParam);
+		} catch (Exception e) {
+			age = 0; // 기본값 처리
+		}
+		if (age > 20) {
+	%>
+		<h3>성인입니다(JSP 스크립틀릿으로 출력)</h3>
 	<% } %>
 	
 	<c:if test="${param.age > 20}">

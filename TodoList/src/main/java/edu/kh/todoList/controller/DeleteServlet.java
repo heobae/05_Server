@@ -30,7 +30,7 @@ public class DeleteServlet extends HttpServlet {
 						
 			// result 값이 0보다 크다 == 변경 성공 , 아니면 실패
 			// -> 원래 보고 있던 상세 페이지로 redirect
-			// -> message "완료 여부가 변경되었습니다!" alert
+			// -> message "todo가 삭제되었습니다!" alert
 			if(result > 0) {
 				session.setAttribute("message", "todo가 삭제되었습니다!");
 				resp.sendRedirect("/");
